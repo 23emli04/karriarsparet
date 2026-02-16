@@ -20,6 +20,26 @@ export interface Education {
     eligibility?: {
         eligibilityDescription: string;
     };
+    /** From detail API */
+    identifier?: string;
+    distance?: boolean | null;
+    expires?: string | null;
+    eligibilityTags?: string[];
+    timeOfStudy?: string[];
+    municipalityCodes?: string[];
+    regionCodes?: string[];
+    lastEdited?: string;
+    lastSynced?: string;
+    enrichedCompetencies?: string[];
+    enrichedGeos?: string[];
+    enrichedOccupations?: string[];
+    tuitionFees?: unknown[];
+    urls?: unknown[];
+    onlyAsPartOfProgram?: unknown[];
+    providers?: unknown[];
+    recommendedPriorKnowledge?: unknown[];
+    enrichedTraits?: string[];
+    isVocational?: boolean | null;
 }
 
 export interface Title {
