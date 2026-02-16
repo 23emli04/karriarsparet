@@ -1,25 +1,32 @@
-// hooks/useEducations.ts
 import useFetch from "./useFetch";
-import { buildEducationsUrl, type EducationsQuery, API_BASE } from "../api/educations";
+import {
+  buildEducationsUrl,
+  type EducationsQuery,
+  API_BASE,
+} from "../api/educations";
+import type { PagedResponse } from "../types/api";
+import type { EducationJobEdResponse } from "../types/api";
 import type { Page } from "../types/Page";
-import type { Education } from "../types/Education";
-import type { EducationEnriched } from "../types/EducationEnriched";
+import { normalizePage } from "../types/Page";
 
 export function useEducations(query: EducationsQuery) {
   const url = buildEducationsUrl(query);
-  return useFetch<Page<Education>>(url);
+  const { data: rawData, loading, error } = useFetch<PagedResponse<EducationJobEdResponse>>(url);
+
+  const data: Page<EducationJobEdResponse> | null = rawData
+    ? normalizePage(rawData)
+    : null;
+
+  return { data, loading, error };
 }
 
-export function useEducationEnrichedById(id: string | undefined) {
-  if (id && typeof id !== 'string') {
-    console.warn("BUG DETECTED: useEducationEnrichedById received an object instead of a string:", id);
-  }
-
-  const isStringId = typeof id === "string" && id !== "undefined" && id !== "[object Object]";
+export function useEducationById(id: string | undefined) {
+  const isStringId =
+    typeof id === "string" && id !== "undefined" && id !== "[object Object]";
 
   const url = isStringId
-      ? `${API_BASE}/Education-enriched/${encodeURIComponent(id)}`
-      : null;
+    ? `${API_BASE}/educations/${encodeURIComponent(id)}`
+    : null;
 
-  return useFetch<EducationEnriched>(url);
+  return useFetch<EducationJobEdResponse>(url);
 }

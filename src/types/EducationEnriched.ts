@@ -4,6 +4,6 @@ import type { EducationProvider } from "./EducationProvider";
 
 export interface EducationEnriched {
     education: Education;
-    educationEvent: EducationEvent;
-    educationProvider: EducationProvider;
+    educationEvent: EducationEvent | null;
+    educationProvider: EducationProvider | null;
 }

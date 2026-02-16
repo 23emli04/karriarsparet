@@ -1,39 +1,76 @@
 import { Link } from "react-router-dom";
-import type {Education} from "../../types/Education.ts";
+import type { EducationJobEdResponse } from "../../types/api";
+import { RegionCodes } from "../../utils/regionCodes";
+import { getEligibilityText } from "../../utils/educationUtils";
+import { getDescriptionFromFullData, getEligibilityFromFullData } from "../../utils/fullDataUtils";
 
-export default function EducationCard({ education }: { education: Education }) {
-  const title = education.titles.find(t => t.lang === 'swe')?.content || education.titles[0]?.content;
-  const startYear = new Date(education.executions[0]?.start).getFullYear();
+interface EducationCardProps {
+  education: EducationJobEdResponse;
+}
+
+export default function EducationCard({ education }: EducationCardProps) {
+  const providersText = education.providers?.length
+    ? education.providers.join(", ")
+    : null;
+  const regionNames = education.regionCodes?.length
+    ? RegionCodes.getNamesString(education.regionCodes)
+    : null;
+  const desc =
+    education.description?.trim() ||
+    getDescriptionFromFullData(education.fullData);
+  const eligibilityText =
+    (education.eligibilityDescription ? getEligibilityText(education.eligibilityDescription) : "") ||
+    getEligibilityFromFullData(education.fullData);
 
   return (
-      <div className="group bg-white rounded-3xl p-6 border border-slate-100 hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-100/50 transition-all flex flex-col h-full">
-        <div className="flex justify-between items-start mb-4">
-        <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-lg uppercase tracking-wider">
-          {education.form.code}
-        </span>
-          <span className="text-blue-600 font-bold text-sm">
-          {education.paceOfStudyPercentages[0]}% Takt
-        </span>
-        </div>
+    <Link
+      to={`/education/${education.id}`}
+      className="group block h-full rounded-3xl p-6 bg-white border border-slate-100 hover:border-blue-200 hover:shadow-lg transition-all duration-200 flex flex-col cursor-pointer"
+    >
+      <h3 className="text-xl font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+        {education.title || "Utbildning"}
+      </h3>
 
-        <h3 className="text-xl font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
-          {title}
-        </h3>
+      {desc ? (
+        <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 mb-3">
+          {desc}
+        </p>
+      ) : null}
 
-        <div className="flex items-center text-slate-500 text-sm mb-4">
-
-          <span>📅 Start: {startYear || "Se info"}</span>
-        </div>
-
-
-        <div className="mt-auto">
-          <Link
-              to={`/education/${education.id}`}
-              className="w-full block text-center py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-blue-600 transition-all"
-          >
-            Visa detaljer
-          </Link>
-        </div>
+      <div className="mb-3 flex-grow min-h-0">
+        <p className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-0.5">
+          Behörighet
+        </p>
+        <p className="text-slate-600 text-sm leading-relaxed line-clamp-2">
+          {eligibilityText || "Ej angivet"}
+        </p>
       </div>
+
+      {providersText ? (
+        <p className="text-slate-500 text-sm mb-2 line-clamp-1" title={providersText}>
+          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+            Anordnare:{" "}
+          </span>
+          {providersText}
+        </p>
+      ) : null}
+
+      {regionNames ? (
+        <p className="text-slate-500 text-sm mb-2 line-clamp-1" title={regionNames}>
+          <span className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+            Region:{" "}
+          </span>
+          {regionNames}
+        </p>
+      ) : null}
+
+      <div className="flex items-center gap-3 text-slate-500 text-sm mt-auto">
+        {education.lastSynced && (
+          <span className="text-xs">
+            Uppdaterad: {new Date(education.lastSynced).toLocaleDateString("sv-SE")}
+          </span>
+        )}
+      </div>
+    </Link>
   );
 }
