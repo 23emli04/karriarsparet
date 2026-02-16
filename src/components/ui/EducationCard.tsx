@@ -1,53 +1,39 @@
 import { Link } from "react-router-dom";
-import type { Education } from "../../types/Education";
+import type {Education} from "../../types/Education.ts";
 
-interface EducationCardProps {
-  education: Education;
-}
-
-export default function EducationCard({ education: edu }: EducationCardProps) {
-  const title = edu.titles.find((t) => t.lang === "swe") || edu.titles[0];
-  const desc = edu.descriptions.find((d) => d.lang === "swe") || edu.descriptions[0];
-  const pace = edu.paceOfStudyPercentages ?? [];
-  const langs = edu.languagesOfInstruction ?? [];
+export default function EducationCard({ education }: { education: Education }) {
+  const title = education.titles.find(t => t.lang === 'swe')?.content || education.titles[0]?.content;
+  const startYear = new Date(education.executions[0]?.start).getFullYear();
 
   return (
-    <Link
-      to={`/education/${edu.id}`}
-      className="group flex flex-col rounded-2xl p-6 sm:p-7 bg-white shadow-sm border border-slate-200/80 hover:shadow-md hover:border-slate-300/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
-    >
-      <span className="inline-flex w-fit text-xs font-semibold uppercase tracking-wider  bg-blue-alt px-2.5 py-1 rounded-md mb-4">
-        {edu.educationLevel.code}
-      </span>
-
-      <h3 className="text-lg sm:text-xl font-semibold text-slate-900 mb-2 leading-tight group-hover:text-slate-800">
-        {title?.content}
-      </h3>
-
-      <p className="text-slate-600 text-sm line-clamp-3 mb-5 flex-grow">
-        {desc?.content}
-      </p>
-
-      <div className="pt-4 border-t border-slate-100 grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
-        <div>
-          <span className="font-medium text-slate-500">Takt</span>
-          <p className="text-slate-700 mt-0.5">
-            {pace.length ? pace.join(", ") + "%" : "—"}
-          </p>
+      <div className="group bg-white rounded-3xl p-6 border border-slate-100 hover:border-blue-200 hover:shadow-2xl hover:shadow-blue-100/50 transition-all flex flex-col h-full">
+        <div className="flex justify-between items-start mb-4">
+        <span className="px-3 py-1 bg-slate-100 text-slate-600 text-xs font-bold rounded-lg uppercase tracking-wider">
+          {education.form.code}
+        </span>
+          <span className="text-blue-600 font-bold text-sm">
+          {education.paceOfStudyPercentages[0]}% Takt
+        </span>
         </div>
-        <div>
-          <span className="font-medium text-slate-500">Språk</span>
-          <p className="text-slate-700 mt-0.5 uppercase">
-            {langs.length ? langs.join(", ") : "—"}
-          </p>
+
+        <h3 className="text-xl font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-blue-600 transition-colors">
+          {title}
+        </h3>
+
+        <div className="flex items-center text-slate-500 text-sm mb-4">
+
+          <span>📅 Start: {startYear || "Se info"}</span>
         </div>
-        <div className="col-span-2">
-          <span className="font-medium text-slate-500">Nästa start</span>
-          <p className="text-slate-700 mt-0.5">
-            {edu.executions[0]?.start || "Ej bestämd"}
-          </p>
+
+
+        <div className="mt-auto">
+          <Link
+              to={`/education/${education.id}`}
+              className="w-full block text-center py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-blue-600 transition-all"
+          >
+            Visa detaljer
+          </Link>
         </div>
       </div>
-    </Link>
   );
 }

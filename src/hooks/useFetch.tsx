@@ -6,12 +6,20 @@ interface UseFetchResult<T> {
     loading: boolean;
 }
 
-const useFetch = <T = unknown>(url: string): UseFetchResult<T> => {
+// ✅ Allow url to be null so hooks can "pause" fetching if an ID is missing
+const useFetch = <T = unknown>(url: string | null): UseFetchResult<T> => {
     const [data, setData] = useState<T | null>(null);
     const [error, setError] = useState<Error | null>(null);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
+        // ✅ Guard: If no URL, reset states and skip fetch
+        if (!url) {
+            setData(null);
+            setLoading(false);
+            return;
+        }
+
         const controller = new AbortController();
         const signal = controller.signal;
 
@@ -30,7 +38,7 @@ const useFetch = <T = unknown>(url: string): UseFetchResult<T> => {
             } catch (err) {
                 if (err instanceof Error) {
                     if (err.name === 'AbortError') {
-                        console.log('Fetch aborted');
+                        // Silent for aborts
                     } else {
                         setError(err);
                     }
