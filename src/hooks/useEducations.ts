@@ -4,14 +4,17 @@ import {
   type EducationsQuery,
   API_BASE,
 } from "../api/educations";
-import type { PagedResponse } from "../types/api";
-import type { EducationJobEdResponse } from "../types/api";
+import type {
+  PagedResponse,
+  EducationJobEdResponse,
+} from "../types/api";
 import type { Page } from "../types/Page";
 import { normalizePage } from "../types/Page";
 
 export function useEducations(query: EducationsQuery) {
   const url = buildEducationsUrl(query);
-  const { data: rawData, loading, error } = useFetch<PagedResponse<EducationJobEdResponse>>(url);
+  const { data: rawData, loading, error } =
+    useFetch<PagedResponse<EducationJobEdResponse>>(url);
 
   const data: Page<EducationJobEdResponse> | null = rawData
     ? normalizePage(rawData)

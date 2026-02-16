@@ -1,13 +1,10 @@
-@import "tailwindcss";
-
-.main_blue{
-    color:#6CE5E8;
+/* Brand color utilities – uses --color-brand from index.css @theme */
+.text-blue {
+  color: var(--color-brand);
 }
-
-.bg-blue{
-    background-color: #6CE5E8;
+.bg-blue {
+  background-color: var(--color-brand);
 }
-
-.bg-blue-alt{
-    background-color: #4bc2c6;
+.bg-blue-alt {
+  background-color: var(--color-brand-alt);
 }

@@ -30,12 +30,15 @@ export function buildEducationsQuery(
     };
   }
 
-  // Filter: either providers OR regions (never both - UI enforces either/or)
-  if (providers.length > 0) {
-    return { mode: "filter", providers, regionCodes: undefined, page, size };
-  }
-  if (regionCodes.length > 0) {
-    return { mode: "filter", providers: undefined, regionCodes, page, size };
+  // Filter: providers and/or regions (API supports both)
+  if (providers.length > 0 || regionCodes.length > 0) {
+    return {
+      mode: "filter",
+      providers: providers.length > 0 ? providers : undefined,
+      regionCodes: regionCodes.length > 0 ? regionCodes : undefined,
+      page,
+      size,
+    };
   }
 
   return { mode: "all", page, size };

@@ -9,11 +9,13 @@ interface UseSearchFiltersReturn {
   setPage: (page: number | ((p: number) => number)) => void;
   setSearchInput: (value: string) => void;
   handleSearch: (e: React.FormEvent, searchValue: string) => void;
-  handleQuickSearch: (term: string) => void;
+  setSearchFromInput: (value: string) => void;
+  applyDebouncedSearch: (value: string) => void;
   toggleProvider: (nameSwe: string) => void;
   toggleRegion: (code: string) => void;
   clearProviders: () => void;
   clearRegions: () => void;
+  clearSearch: () => void;
   clearFilters: () => void;
   hasActiveFilters: boolean;
 }
@@ -33,15 +35,27 @@ export function useSearchFilters(): UseSearchFiltersReturn {
     setPage(0);
   }, []);
 
+
   const handleSearch = useCallback((e: React.FormEvent, searchValue: string) => {
     e.preventDefault();
     setSearchQuery(searchValue);
     setPage(0);
   }, []);
 
-  const handleQuickSearch = useCallback((term: string) => {
-    setSearchInput(term);
-    setSearchQuery(term);
+  const setSearchFromInput = useCallback((value: string) => {
+    setSearchInput(value);
+    setSearchQuery(value);
+    setPage(0);
+  }, []);
+
+  const applyDebouncedSearch = useCallback((value: string) => {
+    setSearchQuery(value);
+    setPage(0);
+  }, []);
+
+  const clearSearch = useCallback(() => {
+    setSearchInput("");
+    setSearchQuery("");
     setPage(0);
   }, []);
 
@@ -49,7 +63,6 @@ export function useSearchFilters(): UseSearchFiltersReturn {
     setSelectedProviders((prev) =>
       prev.includes(nameSwe) ? prev.filter((p) => p !== nameSwe) : [...prev, nameSwe]
     );
-    setSelectedRegions([]); // Either/or: choosing provider clears region
     setPage(0);
   }, []);
 
@@ -57,7 +70,6 @@ export function useSearchFilters(): UseSearchFiltersReturn {
     setSelectedRegions((prev) =>
       prev.includes(regionCode) ? prev.filter((c) => c !== regionCode) : [...prev, regionCode]
     );
-    setSelectedProviders([]); // Either/or: choosing region clears provider
     setPage(0);
   }, []);
 
@@ -83,11 +95,13 @@ export function useSearchFilters(): UseSearchFiltersReturn {
     setPage,
     setSearchInput,
     handleSearch,
-    handleQuickSearch,
+    setSearchFromInput,
+    applyDebouncedSearch,
     toggleProvider,
     toggleRegion,
     clearProviders,
     clearRegions,
+    clearSearch,
     clearFilters,
     hasActiveFilters,
   };

@@ -1,10 +1,10 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Navbar, Footer } from "./components/layout";
-import HomePage from "./components/pages/HomePage.tsx";
-import EducationDetailPage from "./components/pages/EducationDetailPage.tsx";
-import ProviderPage from "./components/pages/ProviderPage.tsx";
-import ProvidersListPage from "./components/pages/ProvidersListPage.tsx";
+import HomePage from "./components/pages/HomePage";
+import EducationDetailPage from "./components/pages/EducationDetailPage";
+import ProviderPage from "./components/pages/ProviderPage";
+import ProvidersListPage from "./components/pages/ProvidersListPage";
 
 function App() {
   return (

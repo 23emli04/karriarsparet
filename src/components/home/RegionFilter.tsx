@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { RegionDto } from "../../types/api";
+import FilterButton from "../ui/FilterButton";
 
 /** Swedish län codes in traditional order (01 Stockholm → 25 Norrbotten) */
 const SWEDISH_REGION_ORDER = [
@@ -26,6 +27,7 @@ interface RegionFilterProps {
   onToggleRegion: (code: string) => void;
   onClearRegions: () => void;
   isLoading: boolean;
+  compact?: boolean;
 }
 
 export default function RegionFilter({
@@ -34,11 +36,12 @@ export default function RegionFilter({
   onToggleRegion,
   onClearRegions,
   isLoading,
+  compact,
 }: RegionFilterProps) {
   const sortedRegions = useMemo(() => sortedBySwedishOrder(regions), [regions]);
 
   return (
-    <div className="mt-6 pt-6 border-t border-slate-200">
+    <div className={compact ? "" : "mt-6 pt-6 border-t border-slate-200"}>
       <p className="text-slate-500 text-sm font-medium mb-3">Filter på region</p>
       <ul className="flex flex-col gap-1 max-h-48 overflow-y-auto pr-1 list-none">
         <li>
@@ -64,31 +67,5 @@ export default function RegionFilter({
         )}
       </ul>
     </div>
-  );
-}
-
-interface FilterButtonProps {
-  label: string;
-  isSelected: boolean;
-  onSelect: () => void;
-  className?: string;
-}
-
-function FilterButton({
-  label,
-  isSelected,
-  onSelect,
-  className = "",
-}: FilterButtonProps) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={`block w-full px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-left ${
-        isSelected ? "bg-blue text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-      } ${className}`}
-    >
-      {label}
-    </button>
   );
 }

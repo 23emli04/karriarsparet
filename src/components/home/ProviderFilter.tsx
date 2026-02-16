@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import type { EducationProvider } from "../../types/api";
+import FilterButton from "../ui/FilterButton";
 
 interface ProviderFilterProps {
   providers: EducationProvider[];
@@ -7,6 +8,7 @@ interface ProviderFilterProps {
   onToggleProvider: (nameSwe: string) => void;
   onClearProviders: () => void;
   isLoading: boolean;
+  compact?: boolean;
 }
 
 const sortedByName = (list: EducationProvider[]) =>
@@ -18,11 +20,12 @@ export default function ProviderFilter({
   onToggleProvider,
   onClearProviders,
   isLoading,
+  compact,
 }: ProviderFilterProps) {
   const sortedProviders = useMemo(() => sortedByName(providers), [providers]);
 
   return (
-    <div className="mt-6 pt-6 border-t border-slate-200">
+    <div className={compact ? "" : "mt-6 pt-6 border-t border-slate-200"}>
       <p className="text-slate-500 text-sm font-medium mb-3">
         Filter på universitet / anordnare
       </p>
@@ -50,31 +53,5 @@ export default function ProviderFilter({
         )}
       </ul>
     </div>
-  );
-}
-
-interface FilterButtonProps {
-  label: string;
-  isSelected: boolean;
-  onSelect: () => void;
-  className?: string;
-}
-
-function FilterButton({
-  label,
-  isSelected,
-  onSelect,
-  className = "",
-}: FilterButtonProps) {
-  return (
-    <button
-      type="button"
-      onClick={onSelect}
-      className={`block w-full px-3 py-1.5 rounded-lg text-sm font-medium transition-colors text-left ${
-        isSelected ? "bg-blue text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-      } ${className}`}
-    >
-      {label}
-    </button>
   );
 }

@@ -12,7 +12,7 @@ export default function SearchBox({
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col md:flex-row gap-3 mb-6 items-stretch"
+      className="flex flex-col md:flex-row gap-3 mb-6 items-stretch min-w-0 w-full"
     >
       <div className="relative flex-1 min-w-0">
         <span
@@ -31,7 +31,7 @@ export default function SearchBox({
       </div>
       <button
         type="submit"
-        className="shrink-0 px-8 py-4 rounded-2xl bg-blue text-white font-semibold hover:opacity-90 transition-opacity h-[52px] md:h-auto"
+        className="shrink-0 flex-shrink-0 min-w-[5rem] px-8 py-4 rounded-2xl bg-blue text-white font-semibold hover:opacity-90 transition-opacity h-[52px] md:h-auto"
       >
         Sök
       </button>

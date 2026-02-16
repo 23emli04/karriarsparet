@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  --color-brand: #6ce5e8;
+  --color-brand-alt: #4bc2c6;
+}
+
 @layer base {
   :root {
     --font-display: "Instrument Serif", Georgia, serif;
@@ -8,6 +13,14 @@
   body {
     font-family: var(--font-sans);
   }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+.animate-slide-up {
+  animation: slide-up 0.25s ease-out;
 }
 
 .btn-pagination {

@@ -1,10 +1,12 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useDebounce } from "../../hooks/useDebounce";
 import Hero from "../ui/Hero";
 import {
   SearchBox,
-  QuickSearchChips,
-  ProviderFilter,
-  RegionFilter,
+  ActiveFilterChips,
+  FilterSidebar,
+  FilterSheet,
+  FilterSheetTrigger,
   ResultsHeader,
   EducationResults,
   Pagination,
@@ -28,14 +30,19 @@ export default function HomePage() {
     setPage,
     setSearchInput,
     handleSearch,
-    handleQuickSearch,
+    applyDebouncedSearch,
     toggleProvider,
     toggleRegion,
     clearProviders,
     clearRegions,
+    clearSearch,
     clearFilters,
-    hasActiveFilters,
   } = useSearchFilters();
+
+  const debouncedSearchInput = useDebounce(searchInput, 400);
+  useEffect(() => {
+    applyDebouncedSearch(debouncedSearchInput);
+  }, [debouncedSearchInput, applyDebouncedSearch]);
 
   const { regions, loading: regionsLoading } = useRegions();
   const { providers, loading: providersLoading } = useEducationProviders();
@@ -57,11 +64,30 @@ export default function HomePage() {
     [regions, selectedRegions]
   );
 
+  const [filterSheetOpen, setFilterSheetOpen] = useState(false);
+  const filterCount = selectedProviders.length + selectedRegions.length;
+
   useEffect(() => {
     if (page > 0) {
       document.getElementById(RESULTS_ANCHOR_ID)?.scrollIntoView({ behavior: "smooth" });
     }
   }, [page]);
+
+  const filterContent = (inline?: boolean) => (
+    <FilterSidebar
+      providers={providers}
+      regions={regions}
+      selectedProviders={selectedProviders}
+      selectedRegions={selectedRegions}
+      onToggleProvider={toggleProvider}
+      onToggleRegion={toggleRegion}
+      onClearProviders={clearProviders}
+      onClearRegions={clearRegions}
+      providersLoading={providersLoading}
+      regionsLoading={regionsLoading}
+      inline={inline}
+    />
+  );
 
   return (
     <div className="min-h-screen bg-slate-50/50">
@@ -73,58 +99,65 @@ export default function HomePage() {
       >
         <div id={RESULTS_ANCHOR_ID} />
 
-        <div className="mb-8 p-6 sm:p-8">
+        <div className="mb-6 p-6 sm:p-8 overflow-visible">
           <SearchBox
             searchInput={searchInput}
             onSearchInputChange={setSearchInput}
             onSubmit={(e) => handleSearch(e, searchInput)}
           />
 
-          <QuickSearchChips
-            onQuickSearch={handleQuickSearch}
-            onClearFilters={clearFilters}
-            hasActiveFilters={hasActiveFilters}
-          />
-
-          <ProviderFilter
-            providers={providers}
+          <ActiveFilterChips
+            searchQuery={searchQuery}
             selectedProviders={selectedProviders}
-            onToggleProvider={toggleProvider}
-            onClearProviders={clearProviders}
-            isLoading={providersLoading}
+            selectedRegions={selectedRegions}
+            regionNames={regionNames}
+            onRemoveSearch={clearSearch}
+            onRemoveProvider={toggleProvider}
+            onRemoveRegion={toggleRegion}
+            onClearAll={clearFilters}
           />
 
-          <RegionFilter
-            regions={regions}
-            selectedRegionCodes={selectedRegions}
-            onToggleRegion={toggleRegion}
-            onClearRegions={clearRegions}
-            isLoading={regionsLoading}
-          />
+          <div className="flex flex-wrap items-center gap-3 mb-6">
+            <FilterSheetTrigger
+              filterCount={filterCount}
+              onClick={() => setFilterSheetOpen(true)}
+            />
+          </div>
+
+          <FilterSheet isOpen={filterSheetOpen} onClose={() => setFilterSheetOpen(false)}>
+            {filterContent(true)}
+          </FilterSheet>
         </div>
 
-        <ResultsHeader
-          searchQuery={searchQuery}
-          selectedProviders={selectedProviders}
-          selectedRegions={selectedRegions}
-          regionNames={regionNames}
-          totalElements={data?.totalElements ?? null}
-          isLoading={loading}
-        />
+        <div className="flex flex-col lg:flex-row gap-8">
+          <div className="hidden lg:block lg:w-72 shrink-0">
+            {filterContent()}
+          </div>
+          <div className="min-w-0 flex-1">
+            <ResultsHeader
+              searchQuery={searchQuery}
+              selectedProviders={selectedProviders}
+              selectedRegions={selectedRegions}
+              regionNames={regionNames}
+              totalElements={data?.totalElements ?? null}
+              isLoading={loading}
+            />
 
-        <EducationResults
-          isLoading={loading}
-          error={error ?? null}
-          educations={data?.content ?? []}
-          onClearFilters={clearFilters}
-        />
+            <EducationResults
+              isLoading={loading}
+              error={error ?? null}
+              educations={data?.content ?? []}
+              onClearFilters={clearFilters}
+            />
 
-        {data && data.totalPages > 1 && (
-          <Pagination
-            data={data}
-            onPageChange={(delta) => setPage((p) => p + delta)}
-          />
-        )}
+            {data && data.totalPages > 1 && (
+              <Pagination
+                data={data}
+                onPageChange={(delta) => setPage((p) => p + delta)}
+              />
+            )}
+          </div>
+        </div>
       </section>
     </div>
   );
