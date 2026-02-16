@@ -8,11 +8,11 @@ export default function Hero() {
           className="mx-auto max-w-full h-auto max-h-[280px] sm:max-h-[320px] object-contain"
         />
         <p className="mt-6 text-slate-600 text-base sm:text-lg max-w-xl mx-auto">
-          Utforska masterprogram skräddarsydda för din karriär.
+          Utforska alla program för att hitta din karriär!
         </p>
         <a
           href="#programs"
-          className="inline-flex items-center gap-2 mt-6 px-6 py-3.5 rounded-full bg-teal-500 text-white font-semibold hover:bg-teal-600 transition-colors duration-200"
+          className="inline-flex items-center gap-2 mt-6 px-6 py-3.5 rounded-full bg-blue text-white font-semibold hover:bg-teal-600 transition-colors duration-200"
         >
           Bläddra bland utbildningar
           <svg

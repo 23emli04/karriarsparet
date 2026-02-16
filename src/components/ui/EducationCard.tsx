@@ -16,7 +16,7 @@ export default function EducationCard({ education: edu }: EducationCardProps) {
       to={`/education/${edu.id}`}
       className="group flex flex-col rounded-2xl p-6 sm:p-7 bg-white shadow-sm border border-slate-200/80 hover:shadow-md hover:border-slate-300/80 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2"
     >
-      <span className="inline-flex w-fit text-xs font-semibold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md mb-4">
+      <span className="inline-flex w-fit text-xs font-semibold uppercase tracking-wider  bg-blue-alt px-2.5 py-1 rounded-md mb-4">
         {edu.educationLevel.code}
       </span>
 

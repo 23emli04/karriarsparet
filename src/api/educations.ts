@@ -1,5 +1,6 @@
 import type { Education } from "../types/Education";
 import type { Page } from "../types/Page";
+import type {EducationEvent} from "../types/EducationEvent.ts";
 
 const API_BASE = "http://localhost:8080/api/educations";
 
@@ -63,9 +64,12 @@ async function fetchOne<T>(url: string): Promise<T> {
 }
 
 export const educationsApi = {
-  getById(id: string) {
-    return fetchOne<Education>(`${API_BASE}/${encodeURIComponent(id)}`);
-  },
+    getById(id: string) {
+        return fetchOne<Education>(
+            `${API_BASE}/id/${encodeURIComponent(id)}`
+        );
+    }
+    ,
 
   getAll(params: { page?: number; size?: number; sortBy?: string; sortDirection?: string }) {
     return fetchPage<Education>(
@@ -165,4 +169,12 @@ export const educationsApi = {
       })
     );
   },
+    getEventByIdentifier(eventId: string) {
+        const transformedId = eventId.startsWith("i")
+            ? "e" + eventId.slice(1)
+            : eventId;
+
+        const url = `http://localhost:8080/api/education-events/${encodeURIComponent(transformedId)}`;
+        return fetchOne<EducationEvent>(url);
+    },
 };

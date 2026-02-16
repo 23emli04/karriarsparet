@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+.main_blue{
+    color:#6CE5E8;
+}
+
+.bg-blue{
+    background-color: #6CE5E8;
+}
+
+.bg-blue-alt{
+    background-color: #4bc2c6;
+}

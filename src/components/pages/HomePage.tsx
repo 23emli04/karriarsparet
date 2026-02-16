@@ -115,7 +115,7 @@ export default function HomePage() {
               />
               <button
                 type="submit"
-                className="px-5 py-2.5 rounded-xl bg-amber-500 text-slate-950 font-semibold hover:bg-amber-400 transition-colors"
+                className="px-5 py-2.5 rounded-xl main_blue text-slate-950 font-semibold hover:main_blue transition-colors"
               >
                 Sök
               </button>
