@@ -1,6 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useEducationById } from "../../hooks/useEducations";
 import { DetailSection, DetailRow, TagList } from "../detail";
+import ExpandableText from "../ui/ExpandableText";
+import ProviderLink from "../ui/ProviderLink";
 import { formatDateSwedish } from "../../utils/dateUtils";
 import { getRegionNamesString } from "../../utils/regionCodes";
 import { getMunicipalityNamesString } from "../../utils/municipalityCodes";
@@ -78,7 +80,6 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
   const eventSummary = fd?.eventSummary as Record<string, unknown> | undefined;
   const enrichments = (fd?.text_enrichments_results as Record<string, unknown>)?.enriched_candidates as Record<string, unknown> | undefined;
 
-  const providersText = data.providers?.length ? data.providers.join(", ") : null;
   const regionText = getRegionNamesString(data.regionCodes);
   const description = (data.description as string)?.trim() || getDescriptionFromFullData(fd);
   const eligibility = getEligibilityFromFullData(fd);
@@ -130,9 +131,14 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
               {data.title || "Utbildning"}
             </h1>
 
-            {providersText && (
+            {data.providers && data.providers.length > 0 && (
               <p className="text-lg font-semibold text-slate-700 mb-6">
-                {providersText}
+                {data.providers.map((p, i) => (
+                  <span key={p}>
+                    {i > 0 && ", "}
+                    <ProviderLink name={p} className="text-inherit hover:text-blue" />
+                  </span>
+                ))}
               </p>
             )}
 
@@ -147,7 +153,7 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
 
             {description && (
               <DetailSection title="Beskrivning">
-                <div className="whitespace-pre-wrap text-slate-700 leading-relaxed">{description}</div>
+                <ExpandableText text={description} className="text-slate-700" collapseAt={500} />
               </DetailSection>
             )}
 
