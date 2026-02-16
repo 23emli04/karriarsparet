@@ -7,81 +7,110 @@ export default function HomePage() {
     const { data, loading, error } = useAllEducationsPaged({ page });
 
     return (
-        <div className="container mx-auto max-w-7xl px-4 py-6">
+        <div className="min-h-screen">
             <Hero />
 
-            <div className="mt-10">
-                <h2 className="text-2xl font-bold mb-6 italic border-l-4 border-blue-600 pl-4">
-                    Explore Our Master's Programs
-                </h2>
+            <section
+                id="programs"
+                className="relative -mt-16 pt-6 pb-20 px-4 sm:px-6 lg:px-8"
+            >
+                <div className="max-w-6xl mx-auto">
+                    <h2
+                        className="text-2xl sm:text-3xl font-normal text-slate-800 mb-8"
+                        style={{ fontFamily: "var(--font-display)" }}
+                    >
+                        Master's Programs
+                    </h2>
 
-                {loading && <p className="animate-pulse text-gray-500">Fetching latest programs...</p>}
-                {error && <p className="text-red-500 bg-red-50 p-3 rounded">Error: {error.message}</p>}
+                    {loading && (
+                        <p className="animate-pulse text-slate-500 py-8">
+                            Loading programs…
+                        </p>
+                    )}
+                    {error && (
+                        <p className="text-amber-800 bg-amber-50 p-4 rounded-xl border border-amber-200">
+                            {error.message}
+                        </p>
+                    )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {data?.content.map((edu) => {
-                        // Priority: English -> First Available
-                        const title = edu.titles.find(t => t.lang === "eng") || edu.titles[0];
-                        const desc = edu.descriptions.find(d => d.lang === "eng") || edu.descriptions[0];
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {data?.content.map((edu) => {
+                            const title =
+                                edu.titles.find((t) => t.lang === "eng") ||
+                                edu.titles[0];
+                            const desc =
+                                edu.descriptions.find(
+                                    (d) => d.lang === "eng"
+                                ) || edu.descriptions[0];
 
-                        return (
-                            <div key={edu.id} className="flex flex-col border rounded-xl p-6 shadow-sm hover:shadow-lg transition-all bg-white">
-                                <div className="mb-4">
-                                    <span className="text-xs font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                            return (
+                                <article
+                                    key={edu.id}
+                                    className="group flex flex-col rounded-2xl p-6 sm:p-7 bg-white shadow-sm border border-slate-200/80 hover:shadow-md hover:border-slate-300/80 transition-all duration-200"
+                                >
+                                    <span className="inline-flex w-fit text-xs font-semibold uppercase tracking-wider text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md mb-4">
                                         {edu.educationLevel.code}
                                     </span>
-                                </div>
 
-                                <h3 className="text-xl font-bold text-gray-900 mb-2">
-                                    {title?.content}
-                                </h3>
+                                    <h3 className="text-lg sm:text-xl font-semibold text-slate-900 mb-2 leading-tight group-hover:text-slate-800">
+                                        {title?.content}
+                                    </h3>
 
-                                <p className="text-gray-600 text-sm line-clamp-3 mb-4">
-                                    {desc?.content}
-                                </p>
+                                    <p className="text-slate-600 text-sm line-clamp-3 mb-5 flex-grow">
+                                        {desc?.content}
+                                    </p>
 
-                                <div className="mt-auto pt-4 border-t border-gray-100 grid grid-cols-2 gap-y-2 text-xs text-gray-500">
-                                    <div>
-                                        <p className="font-semibold text-gray-700">Pace</p>
-                                        <p>{edu.paceOfStudyPercentages.join(", ")}%</p>
+                                    <div className="pt-4 border-t border-slate-100 grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
+                                        <div>
+                                            <span className="font-medium text-slate-500">Pace</span>
+                                            <p className="text-slate-700 mt-0.5">
+                                                {edu.paceOfStudyPercentages.join(", ")}%
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <span className="font-medium text-slate-500">Language</span>
+                                            <p className="text-slate-700 mt-0.5 uppercase">
+                                                {edu.languagesOfInstruction.join(", ")}
+                                            </p>
+                                        </div>
+                                        <div className="col-span-2">
+                                            <span className="font-medium text-slate-500">Next start</span>
+                                            <p className="text-slate-700 mt-0.5">
+                                                {edu.executions[0]?.start || "TBD"}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <p className="font-semibold text-gray-700">Language</p>
-                                        <p className="uppercase">{edu.languagesOfInstruction.join(", ")}</p>
-                                    </div>
-                                    <div className="col-span-2">
-                                        <p className="font-semibold text-gray-700">Next Start</p>
-                                        <p>{edu.executions[0]?.start || "TBD"}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {/* Pagination (Same as previous, ensures user stays within bounds) */}
-                {data && (
-                    <div className="flex justify-between items-center mt-12 py-4">
-                        <button
-                            disabled={data.first}
-                            onClick={() => setPage(p => p - 1)}
-                            className="btn-pagination"
-                        >
-                            Previous
-                        </button>
-                        <span className="text-sm font-medium">
-                            Page {data.number + 1} of {data.totalPages}
-                        </span>
-                        <button
-                            disabled={data.last}
-                            onClick={() => setPage(p => p + 1)}
-                            className="btn-pagination"
-                        >
-                            Next
-                        </button>
+                                </article>
+                            );
+                        })}
                     </div>
-                )}
-            </div>
+
+                    {data && data.totalPages > 1 && (
+                        <nav
+                            className="flex justify-between items-center mt-12 py-6"
+                            aria-label="Pagination"
+                        >
+                            <button
+                                disabled={data.first}
+                                onClick={() => setPage((p) => p - 1)}
+                                className="btn-pagination"
+                            >
+                                Previous
+                            </button>
+                            <span className="text-sm font-medium text-slate-600">
+                                Page {data.number + 1} of {data.totalPages}
+                            </span>
+                            <button
+                                disabled={data.last}
+                                onClick={() => setPage((p) => p + 1)}
+                                className="btn-pagination"
+                            >
+                                Next
+                            </button>
+                        </nav>
+                    )}
+                </div>
+            </section>
         </div>
     );
 }

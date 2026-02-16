@@ -8,7 +8,7 @@ function App() {
 
   return (
       <BrowserRouter>
-          <div className="flex flex-col min-h-screen bg-base-100">
+          <div className="flex flex-col min-h-screen bg-slate-50">
 
               <main className="flex-grow">
                   <Routes>
