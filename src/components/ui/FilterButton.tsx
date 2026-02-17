@@ -18,7 +18,8 @@ export default function FilterButton({
       aria-pressed={isSelected}
       className={`
         px-3 py-2 rounded-xl text-left text-sm font-medium transition-all duration-150
-        ${isSelected ? "bg-blue text-slate-900 shadow-sm" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}
+        ${isSelected ? "bg-brand text-white" : "bg-slate-100 text-slate-700 hover:bg-slate-200"}
+        cursor-pointer
         ${className}
       `.trim()}
     >

@@ -1,10 +1,9 @@
-/* Brand color utilities – uses --color-brand from index.css @theme */
-.text-blue {
-  color: var(--color-brand);
-}
-.bg-blue {
-  background-color: var(--color-brand);
-}
-.bg-blue-alt {
-  background-color: var(--color-brand-alt);
-}
+/* Brand utilities – @theme provides --color-brand; these ensure consistent usage */
+.text-blue,
+.text-brand { color: var(--color-brand); }
+.bg-blue,
+.bg-brand { background-color: var(--color-brand); }
+.bg-brand-muted { background-color: var(--color-brand-muted); }
+.hover\:text-brand:hover { color: var(--color-brand); }
+.hover\:text-brand-hover:hover { color: var(--color-brand-hover); }
+.hover\:bg-brand-hover:hover { background-color: var(--color-brand-hover); }

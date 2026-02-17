@@ -90,16 +90,16 @@ export default function HomePage() {
   );
 
   return (
-    <div className="min-h-screen bg-slate-50/50">
+    <div className="min-h-screen bg-slate-50">
       <Hero />
 
       <section
         id="programs"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 pb-20"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 pb-20"
       >
         <div id={RESULTS_ANCHOR_ID} />
 
-        <div className="mb-6 p-6 sm:p-8 overflow-visible">
+        <div className="mb-6 p-6 sm:p-8 bg-white rounded-xl border border-slate-200 shadow-sm">
           <SearchBox
             searchInput={searchInput}
             onSearchInputChange={setSearchInput}

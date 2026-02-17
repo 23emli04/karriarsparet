@@ -57,11 +57,11 @@ function LoadingState() {
 function ErrorState({ error }: { error: Error }) {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
+      <div className="max-w-md w-full bg-white rounded-xl shadow-sm border border-slate-200 p-6 text-center">
         <p className="text-amber-800 font-medium">{error.message}</p>
         <Link
           to="/"
-          className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors"
+          className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors cursor-pointer"
         >
           ← Tillbaka till utbildningar
         </Link>
@@ -120,12 +120,12 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 font-medium transition-colors cursor-pointer"
         >
           <span aria-hidden>←</span> Tillbaka till utbildningar
         </Link>
 
-        <article className="rounded-2xl sm:rounded-3xl overflow-hidden bg-white shadow-lg border border-slate-200/80">
+        <article className="rounded-xl overflow-hidden bg-white shadow-sm border border-slate-200">
           <div className="p-6 sm:p-8 md:p-10">
             <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mb-2">
               {data.title || "Utbildning"}
@@ -136,7 +136,7 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
                 {data.providers.map((p, i) => (
                   <span key={p}>
                     {i > 0 && ", "}
-                    <ProviderLink name={p} className="text-inherit hover:text-blue" />
+                    <ProviderLink name={p} className="text-inherit hover:text-brand" />
                   </span>
                 ))}
               </p>

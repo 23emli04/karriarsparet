@@ -1,9 +1,9 @@
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-white">
+    <section className="relative bg-white">
       <div className="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
         <img
-          src="/karriarsparet-logo.png"
+          src="/karriarsparet-hero.png"
           alt="Karriärspåret – Hitta din väg"
           className="mx-auto max-w-full h-auto max-h-[280px] sm:max-h-[320px] object-contain"
         />
@@ -12,7 +12,7 @@ export default function Hero() {
         </p>
         <a
           href="#programs"
-          className="inline-flex items-center gap-2 mt-6 px-6 py-3.5 rounded-full bg-blue text-white font-semibold hover:opacity-90 transition-opacity"
+          className="inline-flex items-center gap-2 mt-6 px-6 py-3.5 rounded-xl bg-brand text-white font-semibold hover:bg-brand-hover transition-colors"
         >
           Bläddra bland utbildningar
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -30,7 +30,7 @@ export default function ExpandableText({
         <button
           type="button"
           onClick={() => setIsExpanded((v) => !v)}
-          className="mt-2 text-sm font-medium text-blue hover:text-blue/80 transition-colors"
+          className="mt-2 text-sm font-medium text-brand hover:text-brand-hover transition-colors"
         >
           {isExpanded ? "Visa mindre" : "Visa mer"}
         </button>

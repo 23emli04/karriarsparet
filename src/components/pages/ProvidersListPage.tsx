@@ -9,7 +9,7 @@ export default function ProvidersListPage() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-red-600 font-medium">{error.message}</p>
-          <Link to="/" className="mt-4 inline-block text-blue hover:underline">
+          <Link to="/" className="mt-4 inline-block text-brand hover:text-brand-hover transition-colors">
             ← Tillbaka
           </Link>
         </div>
@@ -26,7 +26,7 @@ export default function ProvidersListPage() {
       <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 font-medium transition-colors cursor-pointer"
         >
           <span aria-hidden>←</span> Tillbaka till utbildningar
         </Link>
@@ -50,7 +50,7 @@ export default function ProvidersListPage() {
               <li key={p.identifier}>
                 <Link
                   to={`/provider/${encodeURIComponent(p.nameSwe)}`}
-                  className="block p-4 rounded-xl bg-white border border-slate-100 hover:border-blue-200 hover:shadow-md transition-all text-slate-900 font-medium"
+                  className="block p-4 rounded-xl bg-white border border-slate-200 hover:border-brand/40 hover:shadow-md transition-all text-slate-900 font-medium"
                 >
                   {p.nameSwe}
                 </Link>

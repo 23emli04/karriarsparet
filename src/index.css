@@ -1,17 +1,37 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #6ce5e8;
-  --color-brand-alt: #4bc2c6;
+  /* Brand palette – teal accent */
+  --color-brand: #0d9488;
+  --color-brand-hover: #0f766e;
+  --color-brand-muted: #ccfbf1;
+  /* Surface & borders */
+  --color-surface: #ffffff;
+  --color-surface-muted: #f8fafc;
+  --color-border: #e2e8f0;
+  --color-border-subtle: #f1f5f9;
+  /* Text */
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-text-subtle: #94a3b8;
 }
 
 @layer base {
   :root {
-    --font-display: "Instrument Serif", Georgia, serif;
-    --font-sans: "DM Sans", system-ui, sans-serif;
+    /* Prefer Agrandir everywhere (fallback to existing sans). */
+    --font-display: "Agrandir", "DM Sans", system-ui, sans-serif;
+    --font-sans: "Agrandir", "DM Sans", system-ui, sans-serif;
+    --radius-sm: 0.5rem;
+    --radius-md: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.25rem;
   }
   body {
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .font-display {
+    font-family: var(--font-display);
   }
 }
 
@@ -23,7 +43,8 @@
   animation: slide-up 0.25s ease-out;
 }
 
+/* Shared components */
 .btn-pagination {
-  @apply px-5 py-2.5 rounded-lg font-medium transition-all duration-200;
+  @apply px-5 py-2.5 rounded-xl font-medium transition-all duration-200;
   @apply bg-slate-100 text-slate-700 hover:bg-slate-200 disabled:opacity-40 disabled:cursor-not-allowed;
 }

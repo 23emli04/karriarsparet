@@ -37,7 +37,7 @@ export default function ProviderLink({ name, stopPropagation, className = "" }: 
   return (
     <Link
       to={`/provider/${encodeURIComponent(name)}`}
-      className={`hover:underline ${className}`}
+      className={`hover:underline cursor-pointer ${className}`}
     >
       {name}
     </Link>

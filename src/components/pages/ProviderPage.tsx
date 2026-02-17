@@ -28,7 +28,7 @@ export default function ProviderPage() {
       <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <div className="text-center">
           <p className="text-slate-600">Ingen anordnare angiven.</p>
-          <Link to="/" className="mt-4 inline-block text-blue font-medium hover:underline">
+          <Link to="/" className="mt-4 inline-block text-brand font-medium hover:text-brand-hover transition-colors">
             ← Tillbaka till utbildningar
           </Link>
         </div>
@@ -45,7 +45,7 @@ export default function ProviderPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 font-medium transition-colors"
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 mb-6 font-medium transition-colors cursor-pointer"
         >
           <span aria-hidden>←</span> Tillbaka till utbildningar
         </Link>
@@ -89,7 +89,7 @@ function ProviderHeader({
   name: string;
 }) {
   return (
-    <header className="rounded-2xl overflow-hidden bg-white shadow-lg border border-slate-200/80 p-6 sm:p-8">
+    <header className="rounded-xl overflow-hidden bg-white shadow-sm border border-slate-200 p-6 sm:p-8">
       <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
         {provider?.nameSwe ?? name}
       </h1>
@@ -111,7 +111,7 @@ function ProviderDetails({ provider }: { provider: EducationProvider }) {
     provider.streetVisit || provider.townVisit || provider.postCodeVisit;
 
   return (
-    <article className="mt-6 rounded-2xl overflow-hidden bg-white shadow border border-slate-200/80 p-6 sm:p-8">
+    <article className="mt-6 rounded-xl overflow-hidden bg-white border border-slate-200 p-6 sm:p-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {provider.responsibleBody && (
           <DetailRow label="Ansvarshavande" value={provider.responsibleBody} />
@@ -128,7 +128,7 @@ function ProviderDetails({ provider }: { provider: EducationProvider }) {
                   href={provider.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-blue hover:underline"
+                  className="text-brand hover:text-brand-hover transition-colors"
                 >
                   {provider.url}
                 </a>
@@ -140,7 +140,7 @@ function ProviderDetails({ provider }: { provider: EducationProvider }) {
           <DetailRow
             label="E-post"
             value={
-              <a href={`mailto:${provider.email}`} className="text-blue hover:underline">
+              <a href={`mailto:${provider.email}`} className="text-brand hover:text-brand-hover transition-colors">
                 {provider.email}
               </a>
             }
@@ -150,7 +150,7 @@ function ProviderDetails({ provider }: { provider: EducationProvider }) {
           <DetailRow
             label="Telefon"
             value={
-              <a href={`tel:${provider.phone}`} className="text-blue hover:underline">
+              <a href={`tel:${provider.phone}`} className="text-brand hover:text-brand-hover transition-colors">
                 {provider.phone}
               </a>
             }
@@ -194,7 +194,7 @@ function ProviderDetails({ provider }: { provider: EducationProvider }) {
 
 function ProviderSkeleton() {
   return (
-    <div className="rounded-2xl overflow-hidden bg-white shadow border border-slate-200/80 p-6 sm:p-8 animate-pulse">
+    <div className="rounded-xl overflow-hidden bg-white border border-slate-200 p-6 sm:p-8 animate-pulse">
       <div className="h-8 w-64 bg-slate-200 rounded-lg" />
       <div className="mt-2 h-4 w-48 bg-slate-100 rounded" />
     </div>
@@ -205,7 +205,7 @@ function EducationsSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       {Array.from({ length: 6 }, (_, i) => (
-        <div key={i} className="h-72 bg-white rounded-3xl animate-pulse border border-slate-100" />
+        <div key={i} className="h-72 bg-white rounded-xl animate-pulse border border-slate-100" />
       ))}
     </div>
   );
@@ -214,11 +214,11 @@ function EducationsSkeleton() {
 function ErrorState({ error }: { error: Error }) {
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
+        <div className="max-w-md w-full bg-white rounded-xl shadow-sm border border-slate-200 p-6 text-center">
         <p className="text-amber-800 font-medium">{error.message}</p>
         <Link
           to="/"
-          className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors"
+          className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors cursor-pointer"
         >
           ← Tillbaka till utbildningar
         </Link>

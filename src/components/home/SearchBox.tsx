@@ -12,7 +12,7 @@ export default function SearchBox({
   return (
     <form
       onSubmit={onSubmit}
-      className="flex flex-col md:flex-row gap-3 mb-6 items-stretch min-w-0 w-full"
+      className="flex flex-col md:flex-row gap-3 mb-6 items-stretch"
     >
       <div className="relative flex-1 min-w-0">
         <span
@@ -26,12 +26,12 @@ export default function SearchBox({
           placeholder="Sök bland tusentals utbildningar..."
           value={searchInput}
           onChange={(e) => onSearchInputChange(e.target.value)}
-          className="w-full pl-12 pr-4 py-4 rounded-2xl bg-slate-50 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all text-lg"
+          className="w-full pl-12 pr-4 py-4 rounded-xl bg-slate-50 border border-slate-200/60 focus:border-brand focus:ring-2 focus:ring-brand/20 focus:outline-none transition-all text-lg"
         />
       </div>
       <button
         type="submit"
-        className="shrink-0 flex-shrink-0 min-w-[5rem] px-8 py-4 rounded-2xl bg-blue text-white font-semibold hover:opacity-90 transition-opacity h-[52px] md:h-auto"
+        className="shrink-0 px-8 py-4 rounded-xl bg-brand text-white font-semibold h-[52px] md:h-auto hover:bg-brand-hover transition-colors"
       >
         Sök
       </button>

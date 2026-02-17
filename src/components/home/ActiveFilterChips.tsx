@@ -45,7 +45,7 @@ export default function ActiveFilterChips({
       <button
         type="button"
         onClick={onClearAll}
-        className="text-sm font-medium text-slate-500 hover:text-slate-700 underline underline-offset-2"
+        className="text-sm font-medium text-slate-500 hover:text-slate-700 underline underline-offset-2 cursor-pointer"
       >
         Rensa alla
       </button>
@@ -64,7 +64,7 @@ function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }
         type="button"
         onClick={onRemove}
         aria-label={`Ta bort ${label}`}
-        className="shrink-0 w-5 h-5 flex items-center justify-center rounded-full hover:bg-slate-200 transition-colors text-slate-500 hover:text-slate-700"
+        className="shrink-0 w-5 h-5 flex items-center justify-center rounded-full hover:bg-slate-200 transition-colors text-slate-500 hover:text-slate-700 cursor-pointer"
       >
         <span aria-hidden>×</span>
       </button>

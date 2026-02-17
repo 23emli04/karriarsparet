@@ -29,12 +29,12 @@ export default function FilterSheet({
   return (
     <>
       <div
-        className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden"
+        className="fixed inset-0 bg-slate-900/50 z-40 lg:hidden cursor-pointer"
         aria-hidden
         onClick={onClose}
       />
       <div
-        className="fixed inset-x-0 bottom-0 top-1/3 z-50 lg:hidden flex flex-col bg-white rounded-t-3xl shadow-2xl animate-slide-up"
+        className="fixed inset-x-0 bottom-0 top-1/3 z-50 lg:hidden flex flex-col bg-white rounded-t-2xl shadow-2xl animate-slide-up"
         role="dialog"
         aria-modal="true"
         aria-label="Filter"
@@ -45,7 +45,7 @@ export default function FilterSheet({
             type="button"
             onClick={onClose}
             aria-label="Stäng"
-            className="p-2 -m-2 rounded-lg hover:bg-slate-100 transition-colors"
+            className="p-2 -m-2 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
           >
             <svg className="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -69,7 +69,7 @@ export function FilterSheetTrigger({
     <button
       type="button"
       onClick={onClick}
-      className="lg:hidden flex items-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 shadow-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+      className="lg:hidden flex items-center gap-2 px-4 py-3 rounded-xl bg-white border border-slate-200 font-medium text-slate-700 hover:bg-slate-50 transition-colors"
       aria-label={`Filter${filterCount > 0 ? ` (${filterCount} valda)` : ""}`}
     >
       <svg className="w-5 h-5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -77,7 +77,7 @@ export function FilterSheetTrigger({
       </svg>
       Filter
       {filterCount > 0 && (
-        <span className="min-w-[1.25rem] h-5 px-1.5 flex items-center justify-center rounded-full bg-blue text-slate-900 text-xs font-bold">
+        <span className="min-w-[1.25rem] h-5 px-1.5 flex items-center justify-center rounded-lg bg-brand text-white text-xs font-semibold">
           {filterCount}
         </span>
       )}
