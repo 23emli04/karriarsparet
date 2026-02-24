@@ -5,6 +5,7 @@ import HomePage from "./components/pages/HomePage";
 import EducationDetailPage from "./components/pages/EducationDetailPage";
 import ProviderPage from "./components/pages/ProviderPage";
 import ProvidersListPage from "./components/pages/ProvidersListPage";
+import AboutPage from "./components/pages/AboutPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/education/:id" element={<EducationDetailPage />} />
             <Route path="/providers" element={<ProvidersListPage />} />
             <Route path="/provider/:name" element={<ProviderPage />} />
+            <Route path="/about" element={<AboutPage />} />
           </Routes>
         </main>
         <Footer />

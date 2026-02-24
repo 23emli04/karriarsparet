@@ -6,7 +6,10 @@ export default function Hero() {
           src="/karriarsparet-hero.png"
           alt="Karriärspåret – Hitta din väg"
           className="mx-auto max-w-full h-auto max-h-[280px] sm:max-h-[320px] object-contain"
-        />
+        /> 
+        <p className="mt-6 text-slate-600 text-sm font-semibold">
+        Skapad av Emil Moffatt :)
+      </p>
         <p className="mt-6 text-slate-600 text-base sm:text-lg max-w-xl mx-auto">
           Utforska alla program för att hitta din karriär
         </p>

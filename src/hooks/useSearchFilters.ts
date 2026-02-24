@@ -1,4 +1,31 @@
-import { useState, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+
+const FILTERS_STORAGE_KEY = "karriarsparet.home.filters.v1";
+
+interface PersistedFilters {
+  searchQuery?: string;
+  selectedProviders?: string[];
+  selectedRegions?: string[];
+  selectedEducationLevels?: string[];
+  selectedFormCodes?: string[];
+}
+
+function readPersistedFilters(): PersistedFilters {
+  try {
+    const raw = localStorage.getItem(FILTERS_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as PersistedFilters;
+    return {
+      searchQuery: typeof parsed.searchQuery === "string" ? parsed.searchQuery : "",
+      selectedProviders: Array.isArray(parsed.selectedProviders) ? parsed.selectedProviders : [],
+      selectedRegions: Array.isArray(parsed.selectedRegions) ? parsed.selectedRegions : [],
+      selectedEducationLevels: Array.isArray(parsed.selectedEducationLevels) ? parsed.selectedEducationLevels : [],
+      selectedFormCodes: Array.isArray(parsed.selectedFormCodes) ? parsed.selectedFormCodes : [],
+    };
+  } catch {
+    return {};
+  }
+}
 
 interface UseSearchFiltersReturn {
   page: number;
@@ -6,6 +33,8 @@ interface UseSearchFiltersReturn {
   searchInput: string;
   selectedProviders: string[];
   selectedRegions: string[];
+  selectedEducationLevels: string[];
+  selectedFormCodes: string[];
   setPage: (page: number | ((p: number) => number)) => void;
   setSearchInput: (value: string) => void;
   handleSearch: (e: React.FormEvent, searchValue: string) => void;
@@ -13,25 +42,42 @@ interface UseSearchFiltersReturn {
   applyDebouncedSearch: (value: string) => void;
   toggleProvider: (nameSwe: string) => void;
   toggleRegion: (code: string) => void;
+  toggleEducationLevel: (code: string) => void;
+  toggleFormCode: (code: string) => void;
   clearProviders: () => void;
   clearRegions: () => void;
+  clearEducationLevels: () => void;
+  clearFormCodes: () => void;
   clearSearch: () => void;
   clearFilters: () => void;
   hasActiveFilters: boolean;
 }
 
 export function useSearchFilters(): UseSearchFiltersReturn {
+  const persisted = readPersistedFilters();
   const [page, setPage] = useState(0);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchInput, setSearchInput] = useState("");
-  const [selectedProviders, setSelectedProviders] = useState<string[]>([]);
-  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState(persisted.searchQuery ?? "");
+  const [searchInput, setSearchInput] = useState(persisted.searchQuery ?? "");
+  const [selectedProviders, setSelectedProviders] = useState<string[]>(
+    persisted.selectedProviders ?? []
+  );
+  const [selectedRegions, setSelectedRegions] = useState<string[]>(
+    persisted.selectedRegions ?? []
+  );
+  const [selectedEducationLevels, setSelectedEducationLevels] = useState<string[]>(
+    persisted.selectedEducationLevels ?? []
+  );
+  const [selectedFormCodes, setSelectedFormCodes] = useState<string[]>(
+    persisted.selectedFormCodes ?? []
+  );
 
   const clearFilters = useCallback(() => {
     setSearchQuery("");
     setSearchInput("");
     setSelectedProviders([]);
     setSelectedRegions([]);
+    setSelectedEducationLevels([]);
+    setSelectedFormCodes([]);
     setPage(0);
   }, []);
 
@@ -83,8 +129,53 @@ export function useSearchFilters(): UseSearchFiltersReturn {
     setPage(0);
   }, []);
 
+  const toggleEducationLevel = useCallback((code: string) => {
+    setSelectedEducationLevels((prev) =>
+      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
+    );
+    setPage(0);
+  }, []);
+
+  const toggleFormCode = useCallback((code: string) => {
+    setSelectedFormCodes((prev) =>
+      prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
+    );
+    setPage(0);
+  }, []);
+
+  const clearEducationLevels = useCallback(() => {
+    setSelectedEducationLevels([]);
+    setPage(0);
+  }, []);
+
+  const clearFormCodes = useCallback(() => {
+    setSelectedFormCodes([]);
+    setPage(0);
+  }, []);
+
   const hasActiveFilters =
-    !!searchQuery || selectedProviders.length > 0 || selectedRegions.length > 0;
+    !!searchQuery ||
+    selectedProviders.length > 0 ||
+    selectedRegions.length > 0 ||
+    selectedEducationLevels.length > 0 ||
+    selectedFormCodes.length > 0;
+
+  useEffect(() => {
+    const payload: PersistedFilters = {
+      searchQuery,
+      selectedProviders,
+      selectedRegions,
+      selectedEducationLevels,
+      selectedFormCodes,
+    };
+    localStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(payload));
+  }, [
+    searchQuery,
+    selectedProviders,
+    selectedRegions,
+    selectedEducationLevels,
+    selectedFormCodes,
+  ]);
 
   return {
     page,
@@ -92,6 +183,8 @@ export function useSearchFilters(): UseSearchFiltersReturn {
     searchInput,
     selectedProviders,
     selectedRegions,
+    selectedEducationLevels,
+    selectedFormCodes,
     setPage,
     setSearchInput,
     handleSearch,
@@ -99,8 +192,12 @@ export function useSearchFilters(): UseSearchFiltersReturn {
     applyDebouncedSearch,
     toggleProvider,
     toggleRegion,
+    toggleEducationLevel,
+    toggleFormCode,
     clearProviders,
     clearRegions,
+    clearEducationLevels,
+    clearFormCodes,
     clearSearch,
     clearFilters,
     hasActiveFilters,

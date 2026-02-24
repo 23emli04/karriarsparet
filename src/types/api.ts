@@ -39,4 +39,32 @@ export interface PagedResponse<T> {
   page?: PageInfo;
 }
 
+/** Occupation match for a specific education id */
+export interface EducationOccupationMatch {
+  educationId: string;
+  ssyk: string;
+  occupationGroupLabel: string;
+  groupMatchScore: number;
+  fetchedAt: string;
+  alternativeTitles: string[];
+}
+
+/** Yrkesbarometer response row for one SSYK + region/national level */
+export interface YrkesbarometerEntry {
+  id: number;
+  ssyk: string;
+  ssykText: string | null;
+  ybYrke: string | null;
+  lan: string;
+  jobbmojligheter: string | null;
+  prognos: string | null;
+  rekryteringssituation: string | null;
+  textJobbmojligheter: string | null;
+  textRekryteringssituation: string | null;
+  hogstaBedomningsniva: string | null;
+  delvisHelt: string | null;
+  omgang: string;
+  importedAt: string;
+}
+
 export type { EducationProvider } from "./EducationProvider";

@@ -2,10 +2,14 @@ interface ActiveFilterChipsProps {
   searchQuery: string;
   selectedProviders: string[];
   selectedRegions: string[];
+  selectedEducationLevels: string[];
+  selectedFormCodes: string[];
   regionNames: string[];
   onRemoveSearch: () => void;
   onRemoveProvider: (name: string) => void;
   onRemoveRegion: (code: string) => void;
+  onRemoveEducationLevel: (code: string) => void;
+  onRemoveFormCode: (code: string) => void;
   onClearAll: () => void;
 }
 
@@ -13,16 +17,22 @@ export default function ActiveFilterChips({
   searchQuery,
   selectedProviders,
   selectedRegions,
+  selectedEducationLevels,
+  selectedFormCodes,
   regionNames,
   onRemoveSearch,
   onRemoveProvider,
   onRemoveRegion,
+  onRemoveEducationLevel,
+  onRemoveFormCode,
   onClearAll,
 }: ActiveFilterChipsProps) {
   const hasActiveFilters =
     !!searchQuery ||
     selectedProviders.length > 0 ||
-    selectedRegions.length > 0;
+    selectedRegions.length > 0 ||
+    selectedEducationLevels.length > 0 ||
+    selectedFormCodes.length > 0;
 
   if (!hasActiveFilters) return null;
 
@@ -40,6 +50,20 @@ export default function ActiveFilterChips({
           key={code}
           label={regionNames[i] ?? code}
           onRemove={() => onRemoveRegion(code)}
+        />
+      ))}
+      {selectedEducationLevels.map((code) => (
+        <FilterChip
+          key={code}
+          label={`Nivå: ${code}`}
+          onRemove={() => onRemoveEducationLevel(code)}
+        />
+      ))}
+      {selectedFormCodes.map((code) => (
+        <FilterChip
+          key={code}
+          label={`Formkod: ${code}`}
+          onRemove={() => onRemoveFormCode(code)}
         />
       ))}
       <button

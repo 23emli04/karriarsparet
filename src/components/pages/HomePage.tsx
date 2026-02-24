@@ -27,14 +27,20 @@ export default function HomePage() {
     searchInput,
     selectedProviders,
     selectedRegions,
+    selectedEducationLevels,
+    selectedFormCodes,
     setPage,
     setSearchInput,
     handleSearch,
     applyDebouncedSearch,
     toggleProvider,
     toggleRegion,
+    toggleEducationLevel,
+    toggleFormCode,
     clearProviders,
     clearRegions,
+    clearEducationLevels,
+    clearFormCodes,
     clearSearch,
     clearFilters,
   } = useSearchFilters();
@@ -51,6 +57,8 @@ export default function HomePage() {
     searchQuery,
     selectedProviders,
     selectedRegions,
+    selectedEducationLevels,
+    selectedFormCodes,
     page,
     PAGE_SIZE
   );
@@ -65,7 +73,11 @@ export default function HomePage() {
   );
 
   const [filterSheetOpen, setFilterSheetOpen] = useState(false);
-  const filterCount = selectedProviders.length + selectedRegions.length;
+  const filterCount =
+    selectedProviders.length +
+    selectedRegions.length +
+    selectedEducationLevels.length +
+    selectedFormCodes.length;
 
   useEffect(() => {
     if (page > 0) {
@@ -79,10 +91,16 @@ export default function HomePage() {
       regions={regions}
       selectedProviders={selectedProviders}
       selectedRegions={selectedRegions}
+      selectedEducationLevels={selectedEducationLevels}
+      selectedFormCodes={selectedFormCodes}
       onToggleProvider={toggleProvider}
       onToggleRegion={toggleRegion}
+      onToggleEducationLevel={toggleEducationLevel}
+      onToggleFormCode={toggleFormCode}
       onClearProviders={clearProviders}
       onClearRegions={clearRegions}
+      onClearEducationLevels={clearEducationLevels}
+      onClearFormCodes={clearFormCodes}
       providersLoading={providersLoading}
       regionsLoading={regionsLoading}
       inline={inline}
@@ -110,10 +128,14 @@ export default function HomePage() {
             searchQuery={searchQuery}
             selectedProviders={selectedProviders}
             selectedRegions={selectedRegions}
+            selectedEducationLevels={selectedEducationLevels}
+            selectedFormCodes={selectedFormCodes}
             regionNames={regionNames}
             onRemoveSearch={clearSearch}
             onRemoveProvider={toggleProvider}
             onRemoveRegion={toggleRegion}
+            onRemoveEducationLevel={toggleEducationLevel}
+            onRemoveFormCode={toggleFormCode}
             onClearAll={clearFilters}
           />
 
@@ -138,6 +160,8 @@ export default function HomePage() {
               searchQuery={searchQuery}
               selectedProviders={selectedProviders}
               selectedRegions={selectedRegions}
+              selectedEducationLevels={selectedEducationLevels}
+              selectedFormCodes={selectedFormCodes}
               regionNames={regionNames}
               totalElements={data?.totalElements ?? null}
               isLoading={loading}

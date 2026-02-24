@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 const links = [
   { to: "/", label: "Utbildningar" },
   { to: "/providers", label: "Anordnare" },
+  { to: "/about", label: "Om oss" },
 ] as const;
 
 export default function Footer() {

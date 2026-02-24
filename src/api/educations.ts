@@ -28,8 +28,20 @@ export type EducationsQuery =
   | { mode: "region"; regionCode: string; page?: number; size?: number }
   | {
       mode: "filter";
+      query?: string;
       providers?: string[];
       regionCodes?: string[];
+      contents?: string[];
+      educationLevels?: string[];
+      formCodes?: string[];
+      formTypes?: string[];
+      creditsMin?: number;
+      creditsMax?: number;
+      startDateFrom?: string;
+      startDateTo?: string;
+      paceOfStudyMin?: number;
+      paceOfStudyMax?: number;
+      isDegree?: boolean;
       page?: number;
       size?: number;
     };
@@ -53,8 +65,20 @@ export function buildEducationsUrl(query: EducationsQuery): string {
       return `${API_BASE}/educations/region/${encodeURIComponent(query.regionCode)}?${params.toString()}`;
     case "filter": {
       const filterParams = new URLSearchParams(params);
+      if (query.query) filterParams.set("query", query.query);
       query.providers?.forEach((p) => filterParams.append("provider", p));
       query.regionCodes?.forEach((c) => filterParams.append("regionCode", c));
+      query.contents?.forEach((content) => filterParams.append("content", content));
+      query.educationLevels?.forEach((value) => filterParams.append("educationLevel", value));
+      query.formCodes?.forEach((value) => filterParams.append("formCode", value));
+      query.formTypes?.forEach((value) => filterParams.append("formType", value));
+      if (typeof query.creditsMin === "number") filterParams.set("creditsMin", String(query.creditsMin));
+      if (typeof query.creditsMax === "number") filterParams.set("creditsMax", String(query.creditsMax));
+      if (query.startDateFrom) filterParams.set("startDateFrom", query.startDateFrom);
+      if (query.startDateTo) filterParams.set("startDateTo", query.startDateTo);
+      if (typeof query.paceOfStudyMin === "number") filterParams.set("paceOfStudyMin", String(query.paceOfStudyMin));
+      if (typeof query.paceOfStudyMax === "number") filterParams.set("paceOfStudyMax", String(query.paceOfStudyMax));
+      if (typeof query.isDegree === "boolean") filterParams.set("isDegree", String(query.isDegree));
       return `${API_BASE}/educations/search/filter?${filterParams.toString()}`;
     }
     default:

@@ -1,17 +1,24 @@
-import { useState, useMemo } from "react";
+import { useMemo, useState } from "react";
 import type { EducationProvider, RegionDto } from "../../types/api";
 import ProviderFilter from "./ProviderFilter";
 import RegionFilter from "./RegionFilter";
+import FilterButton from "../ui/FilterButton";
 
 interface FilterSidebarProps {
   providers: EducationProvider[];
   regions: RegionDto[];
   selectedProviders: string[];
   selectedRegions: string[];
+  selectedEducationLevels: string[];
+  selectedFormCodes: string[];
   onToggleProvider: (name: string) => void;
   onToggleRegion: (code: string) => void;
+  onToggleEducationLevel: (code: string) => void;
+  onToggleFormCode: (code: string) => void;
   onClearProviders: () => void;
   onClearRegions: () => void;
+  onClearEducationLevels: () => void;
+  onClearFormCodes: () => void;
   providersLoading: boolean;
   regionsLoading: boolean;
   /** When true, renders without the card wrapper (e.g. inside FilterSheet) */
@@ -23,10 +30,16 @@ export default function FilterSidebar({
   regions,
   selectedProviders,
   selectedRegions,
+  selectedEducationLevels,
+  selectedFormCodes,
   onToggleProvider,
   onToggleRegion,
+  onToggleEducationLevel,
+  onToggleFormCode,
   onClearProviders,
   onClearRegions,
+  onClearEducationLevels,
+  onClearFormCodes,
   providersLoading,
   regionsLoading,
   inline,
@@ -66,6 +79,16 @@ export default function FilterSidebar({
               searchValue={regionSearch}
               onSearchChange={setRegionSearch}
             />
+            <EducationLevelFilterSection
+              selectedEducationLevels={selectedEducationLevels}
+              onToggleEducationLevel={onToggleEducationLevel}
+              onClearEducationLevels={onClearEducationLevels}
+            />
+            <FormCodeFilterSection
+              selectedFormCodes={selectedFormCodes}
+              onToggleFormCode={onToggleFormCode}
+              onClearFormCodes={onClearFormCodes}
+            />
     </div>
   );
 
@@ -86,6 +109,91 @@ export default function FilterSidebar({
     </aside>
   );
 }
+
+const EDUCATION_LEVEL_OPTIONS = [
+  { code: "grund", label: "Grundnivå" },
+  { code: "avancerad", label: "Avancerad nivå" },
+  { code: "grundavancerad", label: "Grund och avancerad nivå" },
+  { code: "förutbildning", label: "Förutbildning" },
+] as const;
+
+const FORM_CODE_OPTIONS = [
+  { code: "högskoleutbildning", label: "Högskoleutbildning" },
+  { code: "yrkeshögskoleutbildning", label: "Yrkeshögskola" },
+] as const;
+
+function EducationLevelFilterSection({
+  selectedEducationLevels,
+  onToggleEducationLevel,
+  onClearEducationLevels,
+}: {
+  selectedEducationLevels: string[];
+  onToggleEducationLevel: (code: string) => void;
+  onClearEducationLevels: () => void;
+}) {
+  return (
+    <div className="pt-4 border-t border-slate-100">
+      <p className="text-slate-500 text-sm font-medium mb-3">Nivå</p>
+      <ul className="flex flex-col gap-1 list-none">
+        <li>
+          <FilterButton
+            label="Alla nivåer"
+            isSelected={selectedEducationLevels.length === 0}
+            onSelect={onClearEducationLevels}
+            className="text-left w-full"
+          />
+        </li>
+        {EDUCATION_LEVEL_OPTIONS.map((opt) => (
+          <li key={opt.code}>
+            <FilterButton
+              label={opt.label}
+              isSelected={selectedEducationLevels.includes(opt.code)}
+              onSelect={() => onToggleEducationLevel(opt.code)}
+              className="text-left w-full"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+function FormCodeFilterSection({
+  selectedFormCodes,
+  onToggleFormCode,
+  onClearFormCodes,
+}: {
+  selectedFormCodes: string[];
+  onToggleFormCode: (code: string) => void;
+  onClearFormCodes: () => void;
+}) {
+  return (
+    <div className="pt-4 border-t border-slate-100">
+      <p className="text-slate-500 text-sm font-medium mb-3">Form</p>
+      <ul className="flex flex-col gap-1 list-none">
+        <li>
+          <FilterButton
+            label="Alla former"
+            isSelected={selectedFormCodes.length === 0}
+            onSelect={onClearFormCodes}
+            className="text-left w-full"
+          />
+        </li>
+        {FORM_CODE_OPTIONS.map((opt) => (
+          <li key={opt.code}>
+            <FilterButton
+              label={opt.label}
+              isSelected={selectedFormCodes.includes(opt.code)}
+              onSelect={() => onToggleFormCode(opt.code)}
+              className="text-left w-full"
+            />
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
 
 function ProviderFilterSection({
   filteredProviders,

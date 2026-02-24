@@ -1,7 +1,13 @@
+import { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useEducationById } from "../../hooks/useEducations";
+import {
+  useEducationById,
+  useEducationOccupationMatches,
+  useBestYrkesbarometerForMatches,
+} from "../../hooks/useEducations";
 import { DetailSection, DetailRow, TagList } from "../detail";
-import ExpandableText from "../ui/ExpandableText";
+import { MarketPrognosisSection, OccupationMatchesSection } from "./EducationDetailSections";
+import CmsDescription from "../ui/CmsDescription";
 import ProviderLink from "../ui/ProviderLink";
 import { formatDateSwedish } from "../../utils/dateUtils";
 import { getRegionNamesString } from "../../utils/regionCodes";
@@ -35,12 +41,53 @@ function formatIsoDate(s: string | undefined): string {
 export default function EducationDetailPage() {
   const { id } = useParams<{ id: string }>();
   const { data, loading, error } = useEducationById(id);
+  const [applicationUrl, setApplicationUrl] = useState("");
+  const [applicationLast, setApplicationLast] = useState("");
+
+  useEffect(() => {
+    const isStringId =
+      typeof id === "string" && id !== "undefined" && id !== "[object Object]";
+    if (!isStringId) return;
+
+    const controller = new AbortController();
+
+    const fetchAndLogEducationInfo = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:8080/api/education-events/e${encodeURIComponent(id).substring(1)}`,
+          { signal: controller.signal }
+        );
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status}`);
+        }
+        const payload = await res.json();
+        console.log("education-info response:", payload);
+        setApplicationUrl(typeof payload?.urlSwe === "string" ? payload.urlSwe : "");
+        setApplicationLast(typeof payload?.applicationLast === "string" ? payload.applicationLast : "");
+      } catch (err) {
+        if (controller.signal.aborted) return;
+        console.error("Failed to fetch education-info:", err);
+      }
+    };
+
+    void fetchAndLogEducationInfo();
+
+    return () => {
+      controller.abort();
+    };
+  }, [id]);
 
   if (loading) return <LoadingState />;
   if (error) return <ErrorState error={error} />;
   if (!data) return null;
 
-  return <EducationDetailContent data={data} />;
+  return (
+    <EducationDetailContent
+      data={data}
+      applicationUrl={applicationUrl}
+      applicationLast={applicationLast}
+    />
+  );
 }
 
 function LoadingState() {
@@ -72,9 +119,21 @@ function ErrorState({ error }: { error: Error }) {
 
 interface EducationDetailContentProps {
   data: EducationJobEdResponse;
+  applicationUrl?: string;
+  applicationLast?: string;
 }
 
-function EducationDetailContent({ data }: EducationDetailContentProps) {
+function EducationDetailContent({
+  data,
+  applicationUrl,
+  applicationLast,
+}: EducationDetailContentProps) {
+  const {
+    occupationMatches,
+    loading: occupationLoading,
+    error: occupationError,
+  } = useEducationOccupationMatches(data.id);
+
   const fd = data.fullData as Record<string, unknown> | null | undefined;
   const education = fd?.education as Record<string, unknown> | undefined;
   const eventSummary = fd?.eventSummary as Record<string, unknown> | undefined;
@@ -96,16 +155,57 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
   const pace = (eventSummary?.paceOfStudyPercentage ?? eventSummary?.paceOfStudyPercentages) as number[] | undefined;
   const timeOfStudy = (eventSummary?.timeOfStudy ?? eventSummary?.timeOfStudyCodes) as string[] | undefined;
   const executions = (eventSummary?.executions ?? eventSummary?.execution) as Array<{ start?: string; end?: string }> | undefined;
+  const executionStart = eventSummary?.executionStart as string | undefined;
+  const executionEnd = eventSummary?.executionEnd as string | undefined;
   const distance = Boolean(eventSummary?.distance);
 
   const municipalityNames = getMunicipalityNamesString(municipalityCodes);
   const eventRegionText = getRegionNamesString(regionCodes);
+  const regionCodesForMap = (regionCodes?.length ? regionCodes : data.regionCodes) ?? undefined;
   const occ = (enrichments?.occupations as string[] | undefined) ?? [];
   const comp = (enrichments?.competencies as string[] | undefined) ?? [];
   const traits = (enrichments?.traits as string[] | undefined) ?? [];
   const geos = (enrichments?.geos as string[] | undefined) ?? [];
   const subjectNames = (subjects ?? []).map((s) => s.name ?? s.nameEn ?? "").filter(Boolean);
   const hasEnrichments = occ.length > 0 || comp.length > 0 || traits.length > 0 || geos.length > 0;
+  const topOccupationMatches = useMemo(
+    () =>
+      [...occupationMatches]
+        .sort((a, b) => b.groupMatchScore - a.groupMatchScore)
+        .slice(0, 8),
+    [occupationMatches]
+  );
+  const {
+    yrkesbarometer,
+    selectedSsyk,
+    loading: yrkesbarometerLoading,
+    error: yrkesbarometerError,
+  } = useBestYrkesbarometerForMatches(topOccupationMatches);
+  const selectedOccupationMatch = topOccupationMatches.find(
+    (m) => m.ssyk === selectedSsyk
+  );
+  const regionalYrkesbarometer = yrkesbarometer.filter((row) => row.lan !== "00");
+  const nationalYrkesbarometer = yrkesbarometer.find((row) => row.lan === "00") ?? null;
+  const demandByRegionCode = regionalYrkesbarometer.reduce<
+    Record<string, { jobbmojligheter?: string | null; prognos?: string | null }>
+  >((acc, row) => {
+    const current = acc[row.lan];
+    const incomingHasDemand =
+      typeof row.jobbmojligheter === "string" && row.jobbmojligheter.trim().length > 0;
+    const currentHasDemand =
+      typeof current?.jobbmojligheter === "string" &&
+      current.jobbmojligheter.trim().length > 0;
+
+    // Prefer rows that actually contain demand values.
+    if (!current || incomingHasDemand || !currentHasDemand) {
+      acc[row.lan] = {
+        jobbmojligheter: row.jobbmojligheter,
+        prognos: row.prognos,
+      };
+    }
+
+    return acc;
+  }, {});
 
   const execDisplays = (executions ?? [])
     .filter((e) => e?.start || e?.end)
@@ -114,6 +214,13 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
       const b = formatIsoDate(e.end);
       return a && b ? `${a} – ${b}` : a || b;
     });
+  const fallbackExecutionDisplay = (() => {
+    const a = formatIsoDate(executionStart);
+    const b = formatIsoDate(executionEnd);
+    if (!a && !b) return null;
+    return a && b ? `${a} – ${b}` : a || b;
+  })();
+  const periodDisplay = execDisplays.length > 0 ? execDisplays.join(" · ") : fallbackExecutionDisplay;
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -149,11 +256,41 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
               {formCode && <DetailRow label="Form" value={formCode} />}
               {expires && <DetailRow label="Giltig till" value={formatDateSwedish(expires)} />}
               {data.lastSynced && <DetailRow label="Uppdaterad" value={formatDateSwedish(data.lastSynced)} />}
+              {applicationLast && (
+                <DetailRow
+                  label="Sista ansökningsdag"
+                  value={formatDateSwedish(applicationLast)}
+                />
+              )}
+              {applicationUrl && (
+                <DetailRow
+                  label="Ansökan"
+                  value={
+                    <a
+                      href={applicationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-brand hover:underline"
+                    >
+                      Mer om programmet
+                    </a>
+                  }
+                />
+              )}
             </div>
+
+            <MarketPrognosisSection
+              regionCodesForMap={regionCodesForMap}
+              demandByRegionCode={demandByRegionCode}
+              bestOccupationLabel={selectedOccupationMatch?.occupationGroupLabel}
+              yrkesbarometerLoading={yrkesbarometerLoading}
+              yrkesbarometerError={yrkesbarometerError}
+              nationalYrkesbarometer={nationalYrkesbarometer}
+            />
 
             {description && (
               <DetailSection title="Beskrivning">
-                <ExpandableText text={description} className="text-slate-700" collapseAt={500} />
+                <CmsDescription text={description} />
               </DetailSection>
             )}
 
@@ -163,7 +300,7 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
               </DetailSection>
             )}
 
-            {(municipalityNames || eventRegionText || (languages?.length ?? 0) > 0 || (pace?.length ?? 0) > 0 || (timeOfStudy?.length ?? 0) > 0 || execDisplays.length > 0 || distance) && (
+            {(municipalityNames || eventRegionText || (languages?.length ?? 0) > 0 || (pace?.length ?? 0) > 0 || (timeOfStudy?.length ?? 0) > 0 || periodDisplay || distance) && (
               <DetailSection title="Studieinfo">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {municipalityNames && <DetailRow label="Kommun" value={municipalityNames} />}
@@ -171,11 +308,19 @@ function EducationDetailContent({ data }: EducationDetailContentProps) {
                   {languages?.length ? <DetailRow label="Språk" value={languages.map((l) => getDisplayValue(LANG_MAP, l)).join(", ")} /> : null}
                   {pace?.length ? <DetailRow label="Studietakt" value={pace.map((p) => `${p}%`).join(", ")} /> : null}
                   {timeOfStudy?.length ? <DetailRow label="Studietid" value={timeOfStudy.map((t) => getDisplayValue(TIME_MAP, t)).join(", ")} /> : null}
-                  {execDisplays.length ? <DetailRow label="Period" value={execDisplays.join(" · ")} /> : null}
+                  {periodDisplay ? <DetailRow label="Period" value={periodDisplay} /> : null}
                   {distance && <DetailRow label="Distans" value="Ja" />}
                 </div>
               </DetailSection>
             )}
+
+            <DetailSection title="Matchande yrken">
+              <OccupationMatchesSection
+                occupationLoading={occupationLoading}
+                occupationError={occupationError}
+                topOccupationMatches={topOccupationMatches}
+              />
+            </DetailSection>
 
             {subjectNames.length > 0 && (
               <DetailSection title="Ämnen">

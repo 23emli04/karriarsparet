@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 const navLinks = [
   { to: "/", label: "Utbildningar" },
   { to: "/providers", label: "Anordnare" },
+  { to: "/about", label: "Om oss" },
 ] as const;
 
 export default function Navbar() {

@@ -2,6 +2,8 @@ interface ResultsHeaderProps {
   searchQuery: string;
   selectedProviders: string[];
   selectedRegions: string[];
+  selectedEducationLevels: string[];
+  selectedFormCodes: string[];
   regionNames: string[];
   totalElements: number | null | undefined;
   isLoading: boolean;
@@ -11,11 +13,20 @@ export default function ResultsHeader({
   searchQuery,
   selectedProviders,
   selectedRegions,
+  selectedEducationLevels,
+  selectedFormCodes,
   regionNames,
   totalElements,
   isLoading,
 }: ResultsHeaderProps) {
-  const title = getResultsTitle(searchQuery, selectedProviders, selectedRegions, regionNames);
+  const title = getResultsTitle(
+    searchQuery,
+    selectedProviders,
+    selectedRegions,
+    selectedEducationLevels,
+    selectedFormCodes,
+    regionNames
+  );
   const subtitle = getResultsSubtitle(totalElements, isLoading);
 
   return (
@@ -34,6 +45,8 @@ function getResultsTitle(
   searchQuery: string,
   selectedProviders: string[],
   selectedRegions: string[],
+  selectedEducationLevels: string[],
+  selectedFormCodes: string[],
   regionNames: string[]
 ): string {
   const parts: string[] = [];
@@ -43,6 +56,12 @@ function getResultsTitle(
   }
   if (selectedRegions.length > 0 && regionNames.length > 0) {
     parts.push(`i ${regionNames.length === 1 ? regionNames[0] : regionNames.join(", ")}`);
+  }
+  if (selectedEducationLevels.length > 0) {
+    parts.push(`nivå: ${selectedEducationLevels.join(", ")}`);
+  }
+  if (selectedFormCodes.length > 0) {
+    parts.push(`formkod: ${selectedFormCodes.join(", ")}`);
   }
   if (parts.length > 0) return parts.join(" ");
   return "Alla utbildningar";
