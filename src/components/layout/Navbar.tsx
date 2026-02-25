@@ -18,7 +18,7 @@ export default function Navbar() {
           aria-label="Karriärspåret (startsida)"
         >
           <img
-            src={`${import.meta.env.BASE_URL}karriarsparet-logo.png`}
+            src={`${(import.meta.env.BASE_URL || "/").replace(/\/$/, "")}/karriarsparet-logo.png`}
             alt=""
             aria-hidden
             className="h-8 w-auto shrink-0"
