@@ -12,7 +12,7 @@ import { normalizePage } from "../types/Page";
 import type { Page } from "../types/Page";
 
 export const API_BASE =
-  import.meta.env.VITE_API_BASE ?? "http://localhost:8080/api";
+  import.meta.env.VITE_API_BASE || "http://localhost:8080/api";
 
 /** Query modes supported by the actual API */
 export type EducationsQuery =

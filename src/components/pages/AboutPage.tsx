@@ -38,13 +38,15 @@ export default function AboutPage() {
               </h2>
               <p className="mt-2 text-sm text-slate-600 leading-relaxed">
                 Utbildningar, anordnare och matchningar mot yrken samt
-                arbetsmarknadsprognoser där data finns tillgänglig. Data kommer arbetsförmedlingen, SUSA-Navet och SCB.
+                arbetsmarknadsprognoser där data finns tillgänglig. Data kommer arbetsförmedlingen, SUSA-Navet och SCB. Utbildningar matchas med yrken med hjälp av arbetsförmedlingens API.
+                Yrkenas arbetsmarknadsprognoser ger därmed en indikation på hur jobbmöjligheterna ser ut för utbildningen.
               </p>
             </section>
           </div>
 
           <p className="mt-8 text-sm text-slate-500">
-            Har du feedback eller idéer? Jag förbättrar tjänsten löpande. Kontakta mig på <a href="mailto:info@karriarspatret.se" className="text-brand hover:text-brand-hover transition-colors">info@karriarspatret.se</a>.
+            Har du feedback eller idéer? Jag förbättrar tjänsten löpande. Kontakta mig på <a href="mailto:info@karriarspatret.se" className="text-brand hover:text-brand-hover transition-colors">emilmoff@hotmail.com </a><br />
+              Eller på LinkedIn: <a href="https://www.linkedin.com/in/emil-lindstr%C3%B6m-moffatt-a27165221/" className="text-brand hover:text-brand-hover transition-colors"> Emil Lindström Moffatt</a>.
           </p>
         </article>
       </div>

@@ -13,6 +13,7 @@ import { formatDateSwedish } from "../../utils/dateUtils";
 import { getRegionNamesString } from "../../utils/regionCodes";
 import { getMunicipalityNamesString } from "../../utils/municipalityCodes";
 import { getDescriptionFromFullData, getEligibilityFromFullData } from "../../utils/fullDataUtils";
+import { API_BASE } from "../../api/educations";
 import type { EducationJobEdResponse } from "../../types/api";
 
 const LEVEL_MAP: Record<string, string> = {
@@ -54,7 +55,7 @@ export default function EducationDetailPage() {
     const fetchAndLogEducationInfo = async () => {
       try {
         const res = await fetch(
-          `http://localhost:8080/api/education-events/e${encodeURIComponent(id).substring(1)}`,
+          `${API_BASE}/education-events/e${encodeURIComponent(id).substring(1)}`,
           { signal: controller.signal }
         );
         if (!res.ok) {

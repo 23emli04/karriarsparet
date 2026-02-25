@@ -35,7 +35,9 @@ jobs:
         run: npm ci
 
       - name: Build
-        run: npm run build -- --base "${{ steps.pages.outputs.base_path }}"
+        env:
+          VITE_API_BASE: ${{ vars.VITE_API_BASE }}
+        run: npm run build -- --base=${{ steps.pages.outputs.base_path }}
 
       - name: Add SPA fallback
         run: cp dist/index.html dist/404.html

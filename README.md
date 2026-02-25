@@ -31,7 +31,8 @@ npm run dev
 |----------------|--------------------------------|----------------------------|
 | `VITE_API_BASE` | `http://localhost:8080/api`   | Backend API base URL       |
 
-Create a `.env` or `.env.local` file to override. For production, set `VITE_API_BASE` to your API URL (e.g. `/api` if served behind a reverse proxy).
+- **Local:** Create `.env.local` with `VITE_API_BASE=http://localhost:8080/api` (or copy from `.env.example`).
+- **Production (GitHub Pages):** In repo **Settings → Secrets and variables → Actions → Variables**, add `VITE_API_BASE` with your production API URL (e.g. `https://your-backend.example.com/api`).
 
 ## Scripts
 
