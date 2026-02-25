@@ -23,7 +23,7 @@ export default function Navbar() {
             aria-hidden
             className="h-8 w-auto shrink-0"
           />
-          <span className="truncate text-lg sm:text-xl font-semibold tracking-tight text-slate-900">
+          <span className="hidden sm:inline truncate text-lg sm:text-xl font-semibold tracking-tight text-slate-900">
             Karriärspåret
           </span>
         </Link>

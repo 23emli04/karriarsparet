@@ -3,7 +3,7 @@ export default function Hero() {
     <section className="relative bg-white">
       <div className="max-w-4xl mx-auto px-6 py-16 sm:py-20 text-center">
         <img
-          src="/karriarsparet-hero.png"
+          src={`${(import.meta.env.BASE_URL || "/").replace(/\/$/, "")}/karriarsparet-hero.png`}
           alt="Karriärspåret – Hitta din väg"
           className="mx-auto max-w-full h-auto max-h-[280px] sm:max-h-[320px] object-contain"
         /> 
