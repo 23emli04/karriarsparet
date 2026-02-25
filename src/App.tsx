@@ -7,9 +7,11 @@ import ProviderPage from "./components/pages/ProviderPage";
 import ProvidersListPage from "./components/pages/ProvidersListPage";
 import AboutPage from "./components/pages/AboutPage";
 
+const basename = (import.meta.env.BASE_URL || "/").replace(/\/$/, "") || "/";
+
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={basename}>
       <div className="flex flex-col min-h-screen bg-slate-50">
         <Navbar />
         <main className="flex-grow">
